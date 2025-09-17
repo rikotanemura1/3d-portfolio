@@ -9,7 +9,10 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   2000
 );
-camera.position.set(0, 20, 60);
+// Position the camera so the torus knot sits front and center.  A zero Y value
+// centers the 3D object vertically in the viewport.  Keeping the Z
+// distance similar to before preserves the same zoom level.
+camera.position.set(0, 0, 60);
 
 // Configure renderer and enable transparency
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
