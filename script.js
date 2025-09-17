@@ -29,6 +29,53 @@ const material = new THREE.MeshStandardMaterial({
 const donut = new THREE.Mesh(geometry, material);
 scene.add(donut);
 
+    // Create a simple star field to add depth to the background
+    function addStars() {
+      const starGeometry = new THREE.SphereGeometry(0.2, 24, 24);
+      const starMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 1
+      });
+      for (let i = 0; i < 300; i++) {
+        const star = new THREE.Mesh(starGeometry, starMaterial);
+        star.position.set(
+          (Math.random() - 0.5) * 600,
+          (Math.random() - 0.5) * 600,
+          (Math.random() - 0.5) * 600
+        );
+        scene.add(star);
+      }
+    }
+    addStars();
+
+    // Add floating cubes to create more motion in the background
+    const cubes = [];
+    (function addFloatingCubes() {
+      const cubeGeometry = new THREE.BoxGeometry(3, 3, 3);
+      const cubeMaterial = new THREE.MeshStandardMaterial({
+        color: 0x00ccff,
+        metalness: 0.5,
+        roughness: 0.5
+      });
+      for (let i = 0; i < 25; i++) {
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.position.set(
+          (Math.random() - 0.5) * 400,
+          (Math.random() - 0.5) * 400,
+          (Math.random() - 0.5) * 400
+        );
+        // Assign a random rotation speed for each axis
+        cube.userData.rotationSpeed = new THREE.Vector3(
+          Math.random() * 0.005 + 0.001,
+          Math.random() * 0.005 + 0.001,
+          Math.random() * 0.005 + 0.001
+        );
+        cubes.push(cube);
+        scene.add(cube);
+      }
+    })();
+
 // Add lighting to illuminate the 3D model
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambientLight);
@@ -56,11 +103,17 @@ window.addEventListener('scroll', handleScroll);
 // Animation loop: continue rendering and apply slight rotation for liveliness
 function animate() {
   requestAnimationFrame(animate);
-  // Slowly rotate the donut for subtle movement
-  donut.rotation.y += 0.002;
-  donut.rotation.x += 0.001;
-  controls.update();
-  renderer.render(scene, camera);
+      // Slowly rotate the donut for subtle movement
+      donut.rotation.y += 0.002;
+      donut.rotation.x += 0.001;
+      // Animate the floating cubes
+      cubes.forEach(cube => {
+        cube.rotation.x += cube.userData.rotationSpeed.x;
+        cube.rotation.y += cube.userData.rotationSpeed.y;
+        cube.rotation.z += cube.userData.rotationSpeed.z;
+      });
+      controls.update();
+      renderer.render(scene, camera);
 }
 animate();
 
