@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My 3D Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for skill icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pap+sYmqDaHnp8uWbWiwxupCSvJzpuG1HsfrN7kYM/q9nq9oSn5a/eamodZ+u2ZwX9NR4uc8t90v8PQYneH19Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Three.js library -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <!-- OrbitControls for interactive camera -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.min.js"></script>
 </head>
 <body>
     <nav id="navbar">
         <a href="#home">Home</a>
         <a href="#about">About</a>
+        <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
     </nav>
@@ -19,6 +24,19 @@
         <div class="content">
             <h1>Hello, I'm an Innovative Developer from San Jose</h1>
             <p>Welcome to my interactive 3D portfolio built with Three.js. Explore my work and get to know me better!</p>
+        </div>
+    </section>
+    <section id="skills" class="section">
+        <div class="content">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-item"><i class="fab fa-html5 fa-3x"></i><p>HTML5</p></div>
+                <div class="skill-item"><i class="fab fa-css3-alt fa-3x"></i><p>CSS3</p></div>
+                <div class="skill-item"><i class="fab fa-js fa-3x"></i><p>JavaScript</p></div>
+                <div class="skill-item"><i class="fab fa-react fa-3x"></i><p>React</p></div>
+                <div class="skill-item"><i class="fab fa-node-js fa-3x"></i><p>Node.js</p></div>
+                <div class="skill-item"><i class="fab fa-git-alt fa-3x"></i><p>Git</p></div>
+            </div>
         </div>
     </section>
     <section id="about" class="section">
