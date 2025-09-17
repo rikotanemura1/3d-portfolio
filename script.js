@@ -1,4 +1,4 @@
-// Basic Three.js setup with interactive controls and starfield
+// Basic Three.js setup with an interactive 3D element that responds to scroll
 const canvas = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
 
@@ -9,9 +9,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   2000
 );
-// Position the camera so the torus knot sits front and center.  A zero Y value
-// centers the 3D object vertically in the viewport.  Keeping the Z
-// distance similar to before preserves the same zoom level.
+// Position the camera so the 3D element is centred in the viewport
 camera.position.set(0, 0, 60);
 
 // Configure renderer and enable transparency
@@ -19,74 +17,49 @@ const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Create an interactive Torus Knot centerpiece
-const geometry = new THREE.TorusKnotGeometry(10, 3, 200, 32);
+// Create a torus (donut) geometry to showcase a 3D element
+const geometry = new THREE.TorusGeometry(10, 3, 64, 64);
 const material = new THREE.MeshStandardMaterial({
-  color: 0x0078f0,
+  color: 0xff78ff,
   metalness: 0.6,
   roughness: 0.4,
-  emissive: 0x000000,
-  emissiveIntensity: 0.5
+  emissive: 0x0,
+  emissiveIntensity: 0.2
 });
-const torusKnot = new THREE.Mesh(geometry, material);
-scene.add(torusKnot);
+const donut = new THREE.Mesh(geometry, material);
+scene.add(donut);
 
-// Add subtle ambient and directional lighting for depth
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+// Add lighting to illuminate the 3D model
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-directionalLight.position.set(20, 40, 60);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+directionalLight.position.set(25, 50, 80);
 scene.add(directionalLight);
 
-// Generate a starfield backdrop
-function createStarField(numStars = 1000, spread = 1000) {
-  const positions = [];
-  for (let i = 0; i < numStars; i++) {
-    const x = (Math.random() - 0.5) * spread;
-    const y = (Math.random() - 0.5) * spread;
-    const z = (Math.random() - 0.5) * spread;
-    positions.push(x, y, z);
-  }
-  const starGeometry = new THREE.BufferGeometry();
-  starGeometry.setAttribute(
-    'position',
-    new THREE.Float32BufferAttribute(positions, 3)
-  );
-  const starMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 1.5,
-    sizeAttenuation: true,
-    transparent: true,
-    opacity: 0.8
-  });
-  return new THREE.Points(starGeometry, starMaterial);
-}
-const stars = createStarField(1500, 2000);
-scene.add(stars);
-
-// Add OrbitControls for interactive camera movement
+// Add OrbitControls for user interaction
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.maxDistance = 120;
 controls.minDistance = 30;
 
-// Animation loop with color shifting and damped controls
+// Update the donut's rotation based on scroll position
+function handleScroll() {
+  const scrollY = window.scrollY;
+  // Normalize scroll value to a factor; full rotation occurs per viewport height scrolled
+  const rotationFactor = scrollY / window.innerHeight;
+  donut.rotation.x = rotationFactor * Math.PI;
+  donut.rotation.y = rotationFactor * 2 * Math.PI;
+}
+window.addEventListener('scroll', handleScroll);
+
+// Animation loop: continue rendering and apply slight rotation for liveliness
 function animate() {
   requestAnimationFrame(animate);
-  // Rotate the torus knot slowly
-  torusKnot.rotation.x += 0.004;
-  torusKnot.rotation.y += 0.008;
-  // Hue shift the torus color over time
-  const time = performance.now() * 0.0002;
-  const hue = (time % 1);
-  torusKnot.material.color.setHSL(hue, 0.65, 0.55);
-  // Spin the starfield gently to create depth
-  stars.rotation.y += 0.0005;
-  stars.rotation.x += 0.00025;
-  // Update controls
+  // Slowly rotate the donut for subtle movement
+  donut.rotation.y += 0.002;
+  donut.rotation.x += 0.001;
   controls.update();
-  // Render the scene
   renderer.render(scene, camera);
 }
 animate();
